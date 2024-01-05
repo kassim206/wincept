@@ -15,34 +15,34 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  List<dynamic> users = [];
-  Future<void> fetchUser() async {
-    print('fetchData called');
-    const url = 'https://stuverse.shop/api/login/';
-    final uri = Uri.parse(url);
-
-    // Modify the code to use http.post for sending POST request
-    final response = await http.post(uri, body: {
-      'email': emailController.text,
-      'password': passwordController.text,
-    });
-
-    if (response.statusCode == 200) {
-      // Handle the successful response
-      print('Login successful');
-      // You might want to parse and handle the response accordingly
-    } else {
-      print('Failed to fetch data. Error code: ${response.statusCode}');
-      // Handle error if necessary
-    }
-  }
+  // List<dynamic> users = [];
+  // Future<void> fetchUser() async {
+  //   print('fetchData called');
+  //   const url = 'https://stuverse.shop/api/login/';
+  //   final uri = Uri.parse(url);
+  //
+  //   // Modify the code to use http.post for sending POST request
+  //   final response = await http.post(uri, body: {
+  //     'email': emailController.text,
+  //     'password': passwordController.text,
+  //   });
+  //
+  //   if (response.statusCode == 200) {
+  //     // Handle the successful response
+  //     print('Login successful');
+  //     // You might want to parse and handle the response accordingly
+  //   } else {
+  //     print('Failed to fetch data. Error code: ${response.statusCode}');
+  //     // Handle error if necessary
+  //   }
+  // }
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchUser();
+    // fetchUser();
   }
 
   void dispose() {
@@ -81,7 +81,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
-                  hintText: 'Username,email',
+
+                  hintText: 'username',
                   hintStyle: GoogleFonts.lexend(
                     color: Color(0xff9E9E9E),
                   ),
@@ -97,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
-                  hintText: 'Enter your password',
+                  hintText: 'password',
                   hintStyle: GoogleFonts.lexend(
                     color: Color(0xff9E9E9E),
                   ),
@@ -108,11 +109,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomeScreen(),
-                      ));
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => HomeScreen(),
+                  //     ));
+                  String username = emailController.text;
+                  String password = passwordController.text;
+                  login(username, password, context);
                 },
                 child: Container(
                   child: const Text('Log in'),
@@ -151,5 +155,37 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     ));
+  }
+}
+login(String username, String password, BuildContext context) async {
+  var headers = {
+    'Content-Type': 'application/json',
+    'User-Agent': 'insomnia/8.5.0',
+    'Authorization': 'Token 44f91df7464f18117c3b52d77cb054bbdf34ee0b'
+  };
+
+  var url = 'https://stuverse.shop/api/login/';
+  var body = json.encode({"username": username, "password": password});
+
+  try {
+    var response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ));
+    } else {
+      print('Login failed with status code: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error during login: $e');
   }
 }
