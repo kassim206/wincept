@@ -86,12 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         "userName",
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.grey),
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       )
                     ],
                   ),
                 )),
                 IconButton(
+                  color: Colors.white,
                     onPressed: () {
                       showDialog(
                         context: context,
